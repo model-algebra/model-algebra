@@ -72,6 +72,12 @@
 			<artifactId>json-schema-validator</artifactId>
 			<version>2.0.0</version>
 		</dependency>
+		<!-- Jooq library -->
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq</artifactId>
+			<version>3.18.5</version>
+		</dependency>
 		<!-- JaCoCo Maven Plugin for code coverage -->
 		<dependency>
 			<groupId>org.jacoco</groupId>

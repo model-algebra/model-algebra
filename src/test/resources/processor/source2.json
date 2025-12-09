@@ -1,14 +1,38 @@
-{
-	"field3": true,
-	"field4": ["item4", "item5"],
-	"nestedField": {
-		"subField2": 2.71,
-		"subField3": "subValue3"
+[
+	{
+		"name": "field3",
+		"value": true
 	},
-	"field5": "newValue",
-	"field6": 100,
-	"nestedField2": "not nested in fact", 
-	"nestedField3": {
-		"subFieldA": "subValueA"
+	{
+		"name": "field4",
+		"value": [
+			"item4",
+			"item5"
+		]
+	},
+	{
+		"name": "nestedField",
+		"value": {
+			"subField2": 2.71,
+			"subField3": "subValue3"
+		}
+	},
+	{
+		"name": "field5",
+		"value": "newValue"
+	},
+	{
+		"name": "field6",
+		"value": 100
+	},
+	{
+		"name": "nestedField2",
+		"value": "not nested in fact"
+	},
+	{
+		"name": "nestedField3",
+		"value": {
+			"subFieldA": "subValueA"
+		}
 	}
-}
+]

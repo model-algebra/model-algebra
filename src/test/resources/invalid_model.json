@@ -3,25 +3,31 @@
 		"name": "User",
 		"version": "1.0.0"
 	},
-	"fields": {
-		"id": {
+	"fields": [
+		{
+			"name": "id",
 			"type": "",
 			"description": "Main index",
 			"required": true
 		},
-		"userName": {
-			"type": ["string"],
+		{
+			"name": "userName",
+			"type": [
+				"string"
+			],
 			"description": "Login name",
 			"required": 1213
 		},
-		"firstName": {
+		{
+			"name": "firstName",
 			"type": "string",
 			"description": "First name",
 			"required": false
 		},
-		"secondName": {
+		{
+			"name": "secondName",
 			"description": "Second name",
 			"required": false
 		}
-	}
+	]
 }

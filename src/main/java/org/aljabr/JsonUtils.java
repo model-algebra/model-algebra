@@ -1,6 +1,10 @@
 package org.aljabr;
 
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.kulentsov.Boxed;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -9,7 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
-abstract public class JsonUtils
+public abstract class JsonUtils
 {
 	protected static ObjectMapper mapperTo = new ObjectMapper();
 	protected static ObjectMapper mapperFrom = JsonMapper.builder().build();
@@ -53,5 +57,25 @@ abstract public class JsonUtils
 		{
 			throw new InvalidArgumentException("Invalid JSON processing", e);
 		}
+	}
+
+	public static List<JsonNode> node2list(JsonNode jsonNode) throws InvalidArgumentException
+	{
+		try {
+			return mapperFrom.convertValue(jsonNode, new TypeReference<List<JsonNode>>()
+			{
+			});
+		} catch (IllegalArgumentException e)
+		{
+			throw new InvalidArgumentException("Invalid JSON processing", e);
+		}
+	}
+
+	public static Map<String, Integer> getIndexMap(JsonNode target)
+	{
+		Map<String, Integer> indexMap = new LinkedHashMap<>();
+		Boxed<Integer> index = Boxed.of(0);
+		target.elements().forEachRemaining(node -> indexMap.put(node.get("name").asText(), index.value++));
+		return indexMap;
 	}
 }

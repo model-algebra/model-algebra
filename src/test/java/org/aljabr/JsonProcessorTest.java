@@ -1,12 +1,8 @@
+package org.aljabr;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 
-import org.aljabr.InvalidArgumentException;
-import org.aljabr.JsonProcessor;
-import org.aljabr.JsonUtils;
-import org.aljabr.ResourceLoader;
-import org.aljabr.ResourceUrl;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -42,7 +38,7 @@ public class JsonProcessorTest
 
 		JsonNode unionResult = processor.processLevel(source1, source2, JsonProcessor.Operation.UNION);
 		assertEquals(JsonUtils.string2node(result_union_string), unionResult);
-
+		
 		JsonNode subtractionResult = processor.processLevel(source1, source2, JsonProcessor.Operation.SUBTRACTION);
 		assertEquals(JsonUtils.string2node(result_subtraction_string), subtractionResult);
 		

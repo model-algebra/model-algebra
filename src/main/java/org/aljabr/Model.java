@@ -1,5 +1,6 @@
 package org.aljabr;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -10,12 +11,12 @@ public class Model implements IModel
 	protected final JsonNode root;
 	
 	private final Map<String, JsonNode> metadata;
-	private final Map<String, JsonNode> fields;
+	private final List<JsonNode> fields;
 
 	public Model(JsonNode node) throws InvalidArgumentException
 	{
 		this.root = node;
-		this.fields = JsonUtils.node2map(root.get("fields"));
+		this.fields = JsonUtils.node2list(root.get("fields"));
 		this.metadata = JsonUtils.node2map(root.get("metadata"));
 	}
 
@@ -48,7 +49,7 @@ public class Model implements IModel
 	@Override
 	public Stream<Field> fieldsAsStream()
     {
-		return this.fields.entrySet().stream().map(entry -> new Field(entry.getKey(), entry.getValue()));
+		return this.fields.stream().map(entry -> new Field(entry.get("name").asText(), entry));
 	}
 
 	@Override
