@@ -1,6 +1,18 @@
-{
-	"field1": "value1",
-	"field2": 42,
-	"field5": "newValue",
-	"field6": 100
-}
+[
+	{
+		"name": "field1",
+		"value": "value1"
+	},
+	{
+		"name": "field2",
+		"value": 42
+	},
+	{
+		"name": "field5",
+		"value": "newValue"
+	},
+	{
+		"name": "field6",
+		"value": 100
+	}
+]

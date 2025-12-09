@@ -90,6 +90,19 @@ public class ModelTest
 		assertEquals(user_core_string.replaceAll("\\s+", ""), json.replaceAll("\\s+", ""));
 	}
 	
+	// Test if fields returned by fieldsAsStream() are in correct order, compare to user_core_string
+	@Test
+	void testFieldsAsStreamOrder() throws InvalidArgumentException
+	{
+		IModel coreModel = Model.from(user_core_string);
+		String[] expectedFieldNames = { "id", "userName", "firstName", "secondName" };
+		int index = 0;
+		for (var field : coreModel.fieldsAsStream().toList())
+		{
+			assertEquals(expectedFieldNames[index], field.getName());
+			index++;
+		}
+	}
 	
 	// not ready yet @Test
 	public void testAdd() throws InvalidArgumentException
@@ -99,5 +112,6 @@ public class ModelTest
             System.out.println("Field: " + name);
         });
 	}
+	
 	
 }

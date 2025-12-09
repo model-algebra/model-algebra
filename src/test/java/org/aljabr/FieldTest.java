@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 class FieldTest
 {
 	
-	private static final com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-	
 	@Test
     void testFieldCreation()
     {

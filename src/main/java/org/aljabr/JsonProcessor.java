@@ -1,23 +1,28 @@
 package org.aljabr;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
+import org.kulentsov.Coalesce;
+import org.kulentsov.TypedOptional;
+
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class JsonProcessor
 {
-	public static enum Operation 
+	public enum Operation 
 	{
 		UNION
 		{
 			@Override
 	        public Set<String> combine(Set<String> target, Set<String> source) 
 			{
-	            Set<String> result = new HashSet<>(target);
+	            Set<String> result = new LinkedHashSet<>(target);
 	            result.addAll(source);
+	            
 	            return result;
 	        }
 	    },
@@ -27,7 +32,7 @@ public class JsonProcessor
 	        @Override
 	        public Set<String> combine(Set<String> target, Set<String> source) 
 	        {
-	            Set<String> result = new HashSet<>(target);
+	            Set<String> result = new LinkedHashSet<>(target);
 	            result.retainAll(source);
 	            return result;
 	        }
@@ -37,7 +42,7 @@ public class JsonProcessor
 	    {
 	        @Override
 	        public Set<String> combine(Set<String> target, Set<String> source) {
-	            Set<String> result = new HashSet<>(target);
+	            Set<String> result = new LinkedHashSet<>(target);
 	            result.removeAll(source);
 	            return result;
 	        }
@@ -46,7 +51,7 @@ public class JsonProcessor
 		{
             @Override
             public Set<String> combine(Set<String> target, Set<String> source) {
-                Set<String> result = new HashSet<>(target);
+                Set<String> result = new LinkedHashSet<>(target);
                 for (String item : source) {
                     if (!result.add(item)) {
                         result.remove(item);
@@ -58,38 +63,43 @@ public class JsonProcessor
         
 		public abstract Set<String> combine(Set<String> target, Set<String> source);
 	}
+
+	public Optional<ContainerNode> getContainerForNode(JsonNode node)
+    {
+		return Coalesce.of(
+				() -> TypedOptional.of(ArrayNode.class, node).map(ArrayContainer::new),
+				() -> TypedOptional.of(ObjectNode.class, node).map(ObjectContainer::new)
+				);
+    }
 	
-	private Set<String> getFieldNames(JsonNode node) 
+	public JsonNode processLevel(JsonNode targetNode, JsonNode sourceNode, Operation operation) throws InvalidArgumentException
 	{
-		Set<String> names = new HashSet<>();
-		node.fieldNames().forEachRemaining(names::add);
-		return names;
-	}
-	
-	public JsonNode processLevel(JsonNode target, JsonNode source, Operation operation) throws InvalidArgumentException
-	{
+		ContainerNode target = getContainerForNode(targetNode).orElseThrow(
+				() -> new InvalidArgumentException("Unsupported target node type: " + targetNode.getNodeType()+' '+targetNode, null));
+		ContainerNode source = getContainerForNode(sourceNode).orElseThrow(
+				() -> new InvalidArgumentException("Unsupported source node type: " + sourceNode.getNodeType(), null));
 		// Get fields list of target object
-		Set<String> targetFields = getFieldNames(target);
-		Set<String> sourceFields = getFieldNames(source);
+		Set<String> targetFields = target.getFieldNames();
+		Set<String> sourceFields = source.getFieldNames();
 		Set<String> resultFields = operation.combine(targetFields, sourceFields);
 		
-		ObjectNode result = new ObjectNode(JsonNodeFactory.instance);
-		for (String field : resultFields)
+		ContainerNode result = target.createNew();
+		for (String fieldName : resultFields)
 		{
-			JsonNode targetValue = target.get(field);
-			JsonNode sourceValue = source.get(field);
+			JsonNode targetValue = target.getField(fieldName).orElse(null); 
+			JsonNode sourceValue = source.getField(fieldName).orElse(null);
 
 			if (targetValue != null && sourceValue != null)
 			{
 				if (targetValue.isObject() && sourceValue.isObject())
-					result.set(field, processLevel(targetValue, sourceValue, operation));
+					result.set(fieldName, processLevel(targetValue, sourceValue, operation));
 				else
-					result.set(field, targetValue);
+					result.set(fieldName, targetValue);
 			} else 
-				result.set(field, targetValue != null ? targetValue : sourceValue);
+				result.set(fieldName, targetValue != null ? targetValue : sourceValue);
 			
 		}
-		return result;
+		return result.getNode();
 	}
 }
 

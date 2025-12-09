@@ -3,21 +3,24 @@
 		"name": "User extended model",
 		"version": "1.0.0"
 	},
-	"fields": {
-		"birthdate": {
+	"fields": [
+		{
+			"name": "birthdate",
 			"type": "date",
 			"description": "Birth date",
 			"required": false
 		},
-		"fatherName": {
+		{
+			"name": "fatherName",
 			"type": "string",
 			"description": "Father name",
 			"required": false
 		},
-		"address": {
+		{
+			"name": "address",
 			"type": "string",
 			"description": "Address",
 			"required": false
 		}
-	}
+	]
 }

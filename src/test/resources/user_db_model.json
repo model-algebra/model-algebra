@@ -5,13 +5,15 @@
 		"tableName": "users",
 		"tableType": "InnoDB"
 	},
-	"fields": {
-		"id": {
+	"fields": [
+		{
+			"name": "id",
 			"primaryKey": true
 		},
-		"userName": {
+		{
+			"name": "userName",
 			"dbType": "varchar(25)",
 			"constraints": "NOT NULL UNIQUE"
 		}
-	}
+	]
 }

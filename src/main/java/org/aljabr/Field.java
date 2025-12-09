@@ -1,5 +1,6 @@
 package org.aljabr;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -21,8 +22,20 @@ public class Field
 	{
 		this.name = name;
 		this.type = value.get("type").asText();
-		this.attributes = value.deepCopy();
+		this.attributes = convertAttributes(value);
 		this.attributes.remove("type");
+	}
+	
+	private Map<String, JsonNode> convertAttributes(JsonNode value)
+	{
+		try
+		{
+			return JsonUtils.node2map(value);
+		} catch (InvalidArgumentException e)
+		{
+			e.printStackTrace();
+			return new LinkedHashMap<>();
+		}
 	}
 
 	public String getName()
