@@ -84,6 +84,11 @@
 			<artifactId>jacoco-maven-plugin</artifactId>
 			<version>${jacoco.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.kulentsov</groupId>
+			<artifactId>func-helpers</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 
 	</dependencies>
 	<build>

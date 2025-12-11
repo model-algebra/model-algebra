@@ -12,11 +12,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Checkout func-helpers library
+        uses: actions/checkout@v4
+        with:
+          repository: crimaniak/func-helpers
+          path: lib
+
+      - name: List current directory
+        run: ls -la
+
+      - name: List lib directory
+        run: ls lib/ -la
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
+
+      - name: Build and install library
+        run: mvn -f lib/pom.xml install
 
       - name: Run tests
         run: mvn -B test
