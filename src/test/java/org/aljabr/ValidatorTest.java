@@ -23,6 +23,15 @@ class ValidatorTest
 	}
 	
 	@Test
+	void testAllTypesModel() throws IOException, InvalidArgumentException
+	{
+		var validator = new Validator();
+		var model = new Model(ResourceLoader.loadResourceAsString(ResourceUrl.all_types_model));
+		List<Error> result = validator.validate(model.root);
+		assertTrue(result.isEmpty(), "Expected no validation errors, but found: " + result);
+	}
+
+	@Test
 	void testInvalidSchema() throws IOException, InvalidArgumentException
 	{
 		// Validate resource invalid_model.json

@@ -11,6 +11,7 @@ public abstract class ResourceUrl
 	public static final String json_processor_result_subtraction = "processor/result_subtraction.json";
 	public static final String json_processor_result_intersection = "processor/result_intersection.json";
 	public static final String json_processor_result_xor = "processor/result_xor.json";
+	public static final String all_types_model = "all_types_model.json";
 	public static final String model_schema = "schemas/model-schema.json";
 	
 	private ResourceUrl()
