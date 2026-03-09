@@ -15,7 +15,7 @@ public class Validator
 	
 	public Validator() throws IOException
 	{
-		schema = SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2020_12).getSchema(ResourceLoader.loadResourceAsString("model-schema.json"));;
+		schema = SchemaRegistry.withDefaultDialect(SpecificationVersion.DRAFT_2020_12).getSchema(ResourceLoader.loadResourceAsString("schemas/model-schema.json"));;
 	}
 	
 	public List<Error> validate(JsonNode root)

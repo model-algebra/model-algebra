@@ -14,13 +14,20 @@ public class App {
 		System.out.println("Hello World!");
 
 		try (Connection connection = getConnection()) {
+			if (connection == null)
+			{
+				System.out.println("Failed to connect to the database.");
+				return;
+			}
 			System.out.println("Connected to the database!");
 
-			// request all tables from the public schema
+			try (// request all tables from the public schema
 			var rs = connection.createStatement()
-					.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
-			while (rs.next()) {
-				System.out.println("Table: " + rs.getString("table_name"));
+					.executeQuery("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"))
+			{
+				while (rs.next()) {
+					System.out.println("Table: " + rs.getString("table_name"));
+				}
 			}
 
 		} catch (SQLException e) {

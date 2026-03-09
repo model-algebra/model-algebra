@@ -1,3 +1,6 @@
 [submodule "src/test/resources"]
 	path = src/test/resources
 	url = git@github.com:model-algebra/model-examples.git
+[submodule "src/main/resources/schemas"]
+	path = src/main/resources/schemas
+	url = git@github.com:model-algebra/model-schema.git
