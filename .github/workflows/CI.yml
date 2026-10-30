@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -10,21 +12,24 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: true
 
+      # Pinned so changes in func-helpers cannot silently change or break this build
       - name: Checkout func-helpers library
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: crimaniak/func-helpers
+          ref: 0a3a81b5843455fc35d8d948d48e6bfcf71bea77
           path: func-helpers
 
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
 
       - name: Build and install library
         run: mvn -f func-helpers/pom.xml install
