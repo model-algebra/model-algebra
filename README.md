@@ -28,6 +28,7 @@ The format is defined in [model-schema](https://github.com/model-algebra/model-s
 | [common-typescript](https://github.com/model-algebra/common-typescript) | TypeScript classes of models (`Model`, `ModelSet`) and the bridge interfaces |
 | [model-algebra-typescript](https://github.com/model-algebra/model-algebra-typescript) | TypeScript model operations, validation, and the diff of model sets |
 | [ddl-bridge-typescript](https://github.com/model-algebra/ddl-bridge-typescript) | Models ↔ PostgreSQL DDL, and migrations that bring a database to a set of models |
+| [openapi-bridge-typescript](https://github.com/model-algebra/openapi-bridge-typescript) | Models ↔ OpenAPI 3.1 descriptions of CRUD APIs |
 | [typescript-bridge](https://github.com/model-algebra/typescript-bridge) | Models → TypeScript interfaces, classes with validation, and factories |
 | [vuetify-bridge](https://github.com/model-algebra/vuetify-bridge) | Vue 3 / Vuetify fields, forms and tables driven by models |
 | [example-site](https://github.com/model-algebra/example-site) | Example site of the vuetify-bridge components |
