@@ -18,10 +18,11 @@ public class Field
 		this.attributes = attributes;
 	}
 	
+	/** A field of the model; the type is null in models that only add keys to fields of others, like user_db_model. */
 	public Field(String name, JsonNode value)
 	{
 		this.name = name;
-		this.type = value.get("type").asText();
+		this.type = value.hasNonNull("type") ? value.get("type").asText() : null;
 		this.attributes = convertAttributes(value);
 		this.attributes.remove("type");
 	}

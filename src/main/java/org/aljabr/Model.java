@@ -1,10 +1,14 @@
 package org.aljabr;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Model implements IModel
 {
@@ -64,17 +68,52 @@ public class Model implements IModel
         return this.metadata;
     }
 	
+	/**
+	 * Combines this model with another one. Below the top level as JsonProcessor.processLevel() does; at the top level,
+	 * parts both models have (fields, constraints, keys of bridges...) are combined one level down whatever the
+	 * operation, so that subtraction and xor work on the fields instead of taking away the "fields" key itself. The
+	 * metadata is this model's.
+	 */
 	private IModel applyOperation(IModel m, JsonProcessor.Operation operation)
 	{
 		try
 		{
 			JsonNode otherRoot = JsonUtils.string2node(m.toJson());
-			JsonNode resultNode = new JsonProcessor().processLevel(this.root, otherRoot, operation);
-			return new Model(resultNode);
+			JsonProcessor processor = new JsonProcessor();
+			ObjectNode result = JsonNodeFactory.instance.objectNode();
+
+			Set<String> keys = new LinkedHashSet<>();
+			root.fieldNames().forEachRemaining(keys::add);
+			otherRoot.fieldNames().forEachRemaining(keys::add);
+
+			for (String key : keys)
+			{
+				JsonNode left = root.get(key);
+				JsonNode right = otherRoot.get(key);
+				if (key.equals("metadata"))
+				{
+					if (left != null) result.set(key, left);
+				} else if (left != null && right != null && isContainer(left) && left.getNodeType() == right.getNodeType())
+				{
+					result.set(key, processor.processLevel(left, right, operation));
+				} else
+				{
+					Set<String> present = operation.combine(
+						left != null ? Set.of(key) : Set.of(),
+						right != null ? Set.of(key) : Set.of());
+					if (!present.isEmpty()) result.set(key, left != null ? left : right);
+				}
+			}
+			return new Model(result);
 		} catch (InvalidArgumentException e)
 		{
 			throw new RuntimeException(e);
 		}
+	}
+
+	private static boolean isContainer(JsonNode node)
+	{
+		return node.isObject() || node.isArray();
 	}
 
 	@Override

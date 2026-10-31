@@ -26,7 +26,7 @@ The format is defined in [model-schema](https://github.com/model-algebra/model-s
 | [model-schema](https://github.com/model-algebra/model-schema) | JSON Schema of the model format and the catalog of canonical types |
 | [model-examples](https://github.com/model-algebra/model-examples) | Example models used by the tests of all projects |
 | [common-typescript](https://github.com/model-algebra/common-typescript) | TypeScript classes of models (`Model`, `ModelSet`) and the bridge interfaces |
-| [model-algebra-typescript](https://github.com/model-algebra/model-algebra-typescript) | TypeScript model operations, validation, and the diff of model sets |
+| [model-algebra-typescript](https://github.com/model-algebra/model-algebra-typescript) | TypeScript model operations (union, intersection, subtraction, xor), validation, and the diff of model sets |
 | [ddl-bridge-typescript](https://github.com/model-algebra/ddl-bridge-typescript) | Models ↔ PostgreSQL DDL, and migrations that bring a database to a set of models |
 | [openapi-bridge-typescript](https://github.com/model-algebra/openapi-bridge-typescript) | Models ↔ OpenAPI 3.1 descriptions of CRUD APIs |
 | [typescript-bridge](https://github.com/model-algebra/typescript-bridge) | Models → TypeScript interfaces, classes with validation, and factories |
@@ -51,6 +51,11 @@ The operations work on the whole JSON structure, level by level:
 - **What gets combined:** objects by their keys, and arrays of objects with a `name` (like `fields`) by those names.
 - **Nesting:** a field both sides have is combined recursively when both values are objects or named arrays.
   Otherwise the value of the first model is kept.
+- **Top level:** parts both models have (`fields`, `constraints`, keys of bridges…) are combined one level down
+  whatever the operation, so `a.sub(b)` gives the fields of `a` that `b` doesn't have. The metadata is `a`'s.
+- **Any keys** take part, also those the format doesn't define. A model that only adds keys to fields of another one
+  (like `user_db_model.json`, with database details of the user fields) is united with it when needed; its fields
+  need no `type`.
 
 `processor/` in [model-examples](https://github.com/model-algebra/model-examples) has inputs and the expected result
 of each operation. For example, `user_core_model.json` united with `user_extended_model.json` gives
